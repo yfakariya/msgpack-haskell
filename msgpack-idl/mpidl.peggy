@@ -55,7 +55,7 @@ ftypeNN :: Type
     { TUserDef $1 (fromMaybe [] $2) }
 
 literal ::: Literal
-  = integer { LInt $1 }
+  = literalInteger { LInt $1 }
   / "true"  { LBool True }
   / "false" { LBool False }
   / "null"  { LNull }
@@ -76,6 +76,10 @@ escChar :: Char
 
 integer ::: Int
   = [0-9]+ { read $1 }
+
+literalInteger ::: Integer
+  = '+'? [0-9]+ { read $2 }
+  / '-' [0-9]+  { read ('-' : $1) }
 
 identifier ::: T.Text
   = [a-zA-Z_][a-zA-Z0-9_]* { T.pack ($1 : $2) }

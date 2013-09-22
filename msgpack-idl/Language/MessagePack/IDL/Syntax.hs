@@ -69,7 +69,7 @@ data Type
   deriving (Eq, Show, Data, Typeable)
 
 data Literal
-  = LInt Int
+  = LInt Integer
   | LFloat Double
   | LBool Bool
   | LNull
