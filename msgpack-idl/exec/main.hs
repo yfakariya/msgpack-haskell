@@ -15,6 +15,7 @@ import qualified Language.MessagePack.IDL.CodeGen.Php as Php
 import qualified Language.MessagePack.IDL.CodeGen.Python as Python
 import qualified Language.MessagePack.IDL.CodeGen.Perl as Perl
 import qualified Language.MessagePack.IDL.CodeGen.Erlang as Erlang
+import qualified Language.MessagePack.IDL.CodeGen.CliXml as CliXml
 
 import Paths_msgpack_idl
 
@@ -53,6 +54,10 @@ data MPIDL
   | Erlang
     { output_dir :: FilePath
     , filepath :: FilePath }
+  | CliXml
+    { output_dir :: FilePath
+    , filepath :: FilePath
+    }
   deriving (Show, Eq, Data, Typeable)
 
 main :: IO ()
@@ -96,6 +101,10 @@ main = do
             { output_dir = def
             , filepath = def &= argPos 0
             }
+          , CliXml
+            { output_dir = def
+            , filepath = def &= argPos 0
+            }
           ]
     &= help "MessagePack RPC IDL Compiler"
     &= summary ("mpidl " ++ showVersion version)
@@ -135,4 +144,7 @@ compile conf = do
           
           Erlang {..} -> do
             Erlang.generate (Erlang.Config filepath) spec
+          
+          CliXml {..} -> do
+            CliXml.generate (CliXml.Config filepath) spec
 

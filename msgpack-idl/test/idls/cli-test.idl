@@ -1,0 +1,293 @@
+# Test IDL for CLIXML
+
+# Checking process:
+# 1. Can it generate XML file? Especially, type and literal values.
+# 2. Can the XML file can be imported mpidlcli.exe? The generated code is valid?
+# 3. Can the generated source codes be compiled w/o any errors and warnings? 
+# 4. Is another language (such as VB) also OK?
+# 5. Are the source codes and compiled binaries OK from major checkers'(such as fxcop) perspective.
+# 6. Can the compiled binaries communicate with other languages?
+
+# Message
+
+message one_field_message {
+    0 : int field1
+}
+
+message two_field_message {
+    0 : int  field1
+    1 : bool field2
+}
+
+message field_with_default_message {
+    0 : int field1 = 12345
+}
+
+message all_primitives_message {
+     0 : bool   fieldBoolean
+     1 : byte   fieldSByte
+     2 : short  fieldInt16
+     3 : int    fieldInt32
+     4 : long   fieldInt64
+     5 : ubyte  fieldByte
+     6 : ushort fieldUInt16
+     7 : uint   fieldUInt32
+     8 : ulong  fieldUInt64
+     9 : float  fieldSingle
+    10 : double fieldDouble
+    11 : object fieldObject
+    12 : raw    fieldByteArray
+    13 : string fieldString
+}
+
+message integers_message {
+     0 : int fieldInt = 1
+     1 : int fieldIntPositive = +1
+     2 : int fieldIntNegative = -1
+}
+
+message reals_message {
+     0 : double fieldDoubleIntegral = 1
+     1 : double fieldDoubleIntegralExponentPositive = 1e+1 # 10
+     2 : double fieldDoubleIntegralExponentNegative = 1e-1 # 0.1
+     3 : double fieldDoubleIntegralExponent = 1E1 # 10
+     4 : double fieldDoubleIntegralPositive = +1
+     5 : double fieldDoubleIntegralPositiveExponentPositive = +1e+1 # 10
+     6 : double fieldDoubleIntegralPositiveExponentNegative = +1e-1 # 0.1
+     7 : double fieldDoubleIntegralPositiveExponent = +1E1 # 10
+     8 : double fieldDoubleIntegralNegative = -1
+     9 : double fieldDoubleIntegralNegativeExponentPositive = -1e+1 # -10
+    10 : double fieldDoubleIntegralNegativeExponentNegative = -1e-1 # -0.1
+    11 : double fieldDoubleIntegralNegativeExponent = -1E1 # -10
+    12 : double fieldDoubleReal = 1.2
+    13 : double fieldDoubleRealExponentPositive = 1.2e+1 # 12
+    14 : double fieldDoubleRealExponentNegative = 1.2e-1 # 0.12
+    15 : double fieldDoubleRealExponent = 1.2E1 # 12
+    16 : double fieldDoubleRealPositive = +1.2
+    17 : double fieldDoubleRealPositiveExponentPositive = +1.2e+1 # 12
+    18 : double fieldDoubleRealPositiveExponentNegative = +1.2e-1 # 0.12
+    19 : double fieldDoubleRealPositiveExponent = +1.2E1 # 12
+    20 : double fieldDoubleRealNegative = -1.2
+    21 : double fieldDoubleRealNegativeExponentPositive = -1.2e+1 # -12
+    22 : double fieldDoubleRealNegativeExponentNegative = -1.2e-1 # -0.12
+    23 : double fieldDoubleRealNegativeExponent = -1.2E1 # -12
+    24 : double fieldDoubleNoIntegral = .1 # 0.1
+    25 : double fieldDoubleNoIntegralExponentPositive = .1e+1 # 1
+    26 : double fieldDoubleNoIntegralExponentNegative = .1e-1 # 0.01
+    27 : double fieldDoubleNoIntegralExponent = .1E1 # 1
+    28 : double fieldDoubleNoIntegralPositive = +.1 # 0.1
+    29 : double fieldDoubleNoIntegralPositiveExponentPositive = +.1e+1 # 1
+    30 : double fieldDoubleNoIntegralPositiveExponentNegative = +.1e-1 # 0.01
+    31 : double fieldDoubleNoIntegralPositiveExponent = +.1E1 # 1
+    32 : double fieldDoubleNoIntegralNegative = -.1 # -0.1
+    33 : double fieldDoubleNoIntegralNegativeExponentPositive = -.1e+1 # -1
+    34 : double fieldDoubleNoIntegralNegativeExponentNegative = -.1e-1 # -0.01
+    35 : double fieldDoubleNoIntegralNegativeExponent = -.1E1 # -1
+}
+
+message all_primitives_with_default_message {
+     0 : bool   fieldBooleanTrue = true
+     1 : bool   fieldBooleanFalse = false
+     2 : byte   fieldSByteMinValue = -128
+     3 : byte   fieldSByteMaxValue = 127
+     4 : short  fieldInt16MinValue = -32768
+     5 : short  fieldInt16MaxValue = 32767
+     6 : int    fieldInt32MinValue = -2147483648
+     7 : int    fieldInt32MaxValue = 2147483647
+     8 : long   fieldInt64MinValue = -9223372036854775808
+     9 : long   fieldInt64MaxValue = 9223372036854775807
+    10 : ubyte  fieldByteMaxValue = 255
+    11 : ushort fieldUInt16MaxValue = 65535
+    12 : uint   fieldUInt32MaxValue = 4294967295
+    13 : ulong  fieldUInt64MaxValue = 18446744073709551615
+    14 : float  fieldSingleEpsilon = 1.401298E-45
+    15 : double fieldDoubleEpsilon = 4.94065645841247E-324
+    16 : string fieldString1Byte = "A"
+    17 : string fieldString2BytesNative = "À" # U+00C0
+    18 : string fieldString3BytesNative = "あ" # U+3042
+    19 : string fieldString4BytesNative = "𠝏" # UTF32=U+2074F, UTF16=U+D841,U+DF4F
+    20 : string fieldString2BytesEscaped = "\u00C0"
+    21 : string fieldString3BytesEscaped = "\u3042"
+    22 : string fieldString4BytesEscaped = "\uD841\uDF4F" # UTF32=U+2074F, UTF16=U+D841,U+DF4F
+}
+
+message list_message {
+    0 : list<int> listOfInt32
+    1 : list<string> listOfString
+    2 : list<object> listOfObject
+    3 : list<int?> listOfNullableInt32
+    4 : list<string?> listOfNullableString
+    5 : list<object?> listOfNullableObject
+    6 : list<list<int>> listOfListOfInt32
+    7 : list<list<int?>> listOfListOfNullableInt32
+    8 : list<map<int, int>> listOfMapOfInt32s
+    9 : list<tuple<int, int>> listOfTupleOfInt32s
+}
+
+message map_message {
+    0 : map<int, int> listOfInt32
+    1 : map<string, string> listOfString
+    2 : map<object, object> listOfObject
+    3 : map<int?, int?> listOfNullableInt32
+    4 : map<string?, string?> listOfNullableString
+    5 : map<object?, object?> listOfNullableObject
+    6 : map<string, list<int>> listOfListOfInt32
+    7 : map<string, list<int?>> listOfListOfNullableInt32
+    8 : map<string, map<int, int>> listOfMapOfInt32s
+    9 : map<tuple<int, int>, tuple<int, int>> listOfTupleOfInt32s
+}
+
+message tuple2_message {
+    0 : int field1
+    1 : int field2
+}
+
+message tuple7_message {
+    0 : int field1
+    1 : int field2
+    2 : int field3
+    3 : int field4
+    4 : int field5
+    5 : int field6
+    6 : int field7
+}
+
+
+message tuple8_message {
+    0 : int field1
+    1 : int field2
+    2 : int field3
+    3 : int field4
+    4 : int field5
+    5 : int field6
+    6 : int field7
+    7 : int field8
+}
+
+message tuple15_message {
+     0 : int field1
+     1 : int field2
+     2 : int field3
+     3 : int field4
+     4 : int field5
+     5 : int field6
+     6 : int field7
+     7 : int field8
+     8 : int field9
+     9 : int field10
+    10 : int field11
+    11 : int field12
+    12 : int field13
+    13 : int field14
+    14 : int field15
+}
+
+message all_nullable_message {
+     0 : bool?   fieldBoolean
+     1 : byte?   fieldSByte
+     2 : short?  fieldInt16
+     3 : int?    fieldInt32
+     4 : long?   fieldInt64
+     5 : ubyte?  fieldByte
+     6 : ushort? fieldUInt16
+     7 : uint?   fieldUInt32
+     8 : ulong?  fieldUInt64
+     9 : float?  fieldSingle
+    10 : double? fieldDouble
+    11 : object? fieldObject
+    12 : raw?    fieldByteArray
+    13 : string? fieldString
+    14 : list<string>? fieldList
+    15 : map<string, string>? fieldMap
+    16 : tuple<string, int>? fieldTuple
+}
+
+# should be ERROR in mpidlcli
+message void_field_message {
+    0 : void field1
+}
+
+message udf_message {
+    0 : Tuple<string,int> fieldUdf
+}
+
+message has_type_alias_message {
+    0 : MyInt32 fieldInt32
+}
+
+type MyInt32 = int
+
+exception one_field_error {
+	0 : string fieldString
+}
+
+exception two_field_error {
+	0 : int fieldInt
+	1 : int fieldString
+}
+
+service one_void_method_service {
+	void voidMethod()
+}
+
+service one_non_void_method_service {
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service two_method_service {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+# inherit all
+service inherit_all_service : 1 {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service inherit_all_service : 2 {
+	inherit *
+}
+
+# inherit all w/ hiding
+service inherit_all_hiding_service : 1 {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service inherit_all_hiding_service : 2 {
+	inherit *
+	void voidMethod() # hides base method
+}
+
+# inherit by name
+service inherit_by_name_service : 1 {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service inherit_by_name_service : 2 {
+	inherit voidMethod
+}
+
+# inherit by name w/ overloading 
+service inherit_by_name_all_overloads_service : 1 {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1)
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service inherit_by_name_all_overloads_service : 2 {
+	inherit nonVoidMethod
+}
+
+# inherit by name w/ overloading but only 1
+service inherit_by_name_specific_overloads_service : 1 {
+	void voidMethod()
+	int nonVoidMethod(0: int arg1)
+	int nonVoidMethod(0: int arg1, 1: string arg2)
+}
+
+service inherit_by_name_specific_overloads_service : 2 {
+	inherit int nonVoidMethod(0: int arg1, 1: string arg2)
+}
