@@ -17,10 +17,10 @@ typeParam :: [T.Text]
   / "" { [] }
 
 method :: Method
-  = "inherit" identifier { InheritName $1 }
-  / "inherit" "*" { InheritAll }
-  / "inherit"? ftype identifier "(" (field , ",") ")"
+  = "inherit"? ftype identifier "(" (field , ",") ")"
     { Function (isJust $1) $3 $2 $4 }
+  / "inherit" identifier { InheritName $1 }
+  / "inherit" "*" { InheritAll }
 
 field :: Field
   = integer ":" ftype identifier ("=" literal)?
