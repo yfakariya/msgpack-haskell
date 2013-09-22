@@ -59,7 +59,7 @@ literal ::: Literal
   / "true"  { LBool True }
   / "false" { LBool False }
   / "null"  { LNull }
-  / '\"' charLit* '\"' { LString $ T.pack $1 }
+  / '\"' charLit* '\"' { LString $ T.pack $ concatSurrogatePair $ $1 }
 
 charLit :: Char
   = '\\' escChar
@@ -72,6 +72,7 @@ escChar :: Char
   / '\\' { '\\' }
   / '\"' { '\"' }
   / '\'' { '\'' }
+  / [uU] [0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f] { chr $ fst $ head $ readHex $ $2 : $3 : $4 : [$5] }
 
 integer ::: Int
   = [0-9]+ { read $1 }
